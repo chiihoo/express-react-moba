@@ -1,0 +1,12 @@
+.LeftNav {
+  overflow: hidden;
+  height: 100%;
+  &:hover {
+    overflow: auto;
+  }
+  .logo {
+    height: 32px;
+    background: #f0f2f5;
+    margin: 16px;
+  }
+}

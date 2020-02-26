@@ -1,0 +1,16 @@
+@url=http://localhost:3001
+
+@json=Content-Type: application/json
+
+###
+post {{url}}/admin/api/categories
+{{json}}
+
+{
+  "name": "123"
+}
+
+###
+get {{url}}/admin/api/categories
+###
+get {{url}}/admin
