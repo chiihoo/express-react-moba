@@ -20,41 +20,42 @@ function ItemEdit(props) {
   useEffect(() => {
     if (id) {
       ;(async function fetchCurrentValue() {
-        const res = await http.get(`/rest/item/${id}`)
+        const res = await http.get(`/rest/items/${id}`)
         setCurrentName(res.data.name)
         setCurrentIcon(res.data.icon)
       })()
     } else {
       // setEditCurrentValue({ parent: undefined, name: '' })
       setCurrentName('')
-      // setCurrentIcon()
+      setCurrentIcon()
     }
   }, [id])
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const values = getFieldsValue()
-    console.log(values)
+    // const values = getFieldsValue()
     // values包含表单提交的所有数据，包括name和icon，不能改名字
     // 因为这里提交的是values，后台数据库建的model也是{name,icon}，后台是直接用req.body来自动处理的
-    if (!values.name) {
-      message.error('分类不能为空！')
-      return
-    }
-    if (id) {
-      // 编辑分类
-      const res = await http.put(`/rest/items/${id}`, values)
-      message.success('编辑成功')
-      history.push('/admin/items/list')
-    } else {
-      // 新建分类
-      const res = await http.post('/rest/items', values)
-      message.success('保存成功')
-      setFieldsValue({ name: ''})
-      setCurrentIcon()
 
-      // setUpdateAction(!updateAction)
-    }
+    // 触发表单验证
+    props.form
+      .validateFields()
+      .then(async values => {
+        if (id) {
+          // 编辑物品
+          const res = await http.put(`/rest/items/${id}`, values)
+          message.success('编辑成功')
+          history.push('/admin/items/list')
+        } else {
+          // 新建物品
+          const res = await http.post('/rest/items', values)
+          message.success('保存成功')
+          setFieldsValue({ name: '' })
+          setCurrentIcon()
+          // setUpdateAction(!updateAction)
+        }
+      })
+      .catch(errorInfo => {})
   }
 
   return (

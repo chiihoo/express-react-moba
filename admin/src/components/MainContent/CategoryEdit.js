@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message, PageHeader, Select } from 'antd'
 import http from '../../http'
 import { useHistory, useParams } from 'react-router-dom'
+
 const { Option } = Select
 
 function CategoryEdit(props) {
@@ -48,28 +49,31 @@ function CategoryEdit(props) {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const values = getFieldsValue()
+    // const values = getFieldsValue()
     // values包含表单提交的所有数据，包括name和parent，不能改名字
     // 因为这里提交的是values，后台数据库建的model也是{name,parent}，后台是直接用req.body来自动处理的
-    if (!values.name) {
-      message.error('分类不能为空！')
-      return
-    }
-    if (id) {
-      // 编辑分类
-      const res = await http.put(`/rest/categories/${id}`, values)
-      message.success('编辑成功')
-      history.push('/admin/categories/list')
-    } else {
-      // 新建分类
-      // await http.post('/rest/categories', values)
-      const res = await http.post('/rest/categories', values)
-      message.success('保存成功')
-      // 操作完成后，把表单选项还原
-      setFieldsValue({ parent: undefined, name: '' })
-      // 切换更新状态，使得 获取所有分类 fetchAllCategories方法 再次运行
-      setUpdateAction(!updateAction)
-    }
+
+    // 触发表单验证
+    props.form
+      .validateFields()
+      .then(async values => {
+        if (id) {
+          // 编辑分类
+          const res = await http.put(`/rest/categories/${id}`, values)
+          message.success('编辑成功')
+          history.push('/admin/categories/list')
+        } else {
+          // 新建分类
+          // await http.post('/rest/categories', values)
+          const res = await http.post('/rest/categories', values)
+          message.success('保存成功')
+          // 操作完成后，把表单选项还原
+          setFieldsValue({ parent: undefined, name: '' })
+          // 切换更新状态，使得 获取所有分类 fetchAllCategories方法 再次运行
+          setUpdateAction(!updateAction)
+        }
+      })
+      .catch(errorInfo => {})
   }
 
   return (

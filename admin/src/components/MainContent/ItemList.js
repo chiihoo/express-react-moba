@@ -7,14 +7,17 @@ function ItemList(props) {
   const history = useHistory()
   const [dataSource, setDataSource] = useState([])
   const [updateAction, setUpdateAction] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchItems = async () => {
+      setLoading(true)
       const items = await http.get('/rest/items')
       const data = items.data.map((item, idx, arr) => {
         return { key: item._id, id: item._id, name: item.name, icon: item.icon }
       })
       setDataSource(data)
+      setLoading(false)
     }
     fetchItems()
   }, [updateAction])
@@ -53,14 +56,12 @@ function ItemList(props) {
       title: '图标',
       dataIndex: 'icon',
       key: 'icon',
-
       render: text => (text ? <img src={text} style={{ width: 80 }}></img> : '')
     },
     {
       title: '操作',
       key: 'action',
       width: 200,
-
       render: (text, record) => {
         return (
           <span>
@@ -88,6 +89,7 @@ function ItemList(props) {
         dataSource={dataSource}
         columns={columns}
         pagination={{ pageSize: 10, showSizeChanger: true, showQuickJumper: true }}
+        loading={loading}
       />
     </div>
   )

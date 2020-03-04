@@ -1,25 +1,38 @@
 import React from 'react'
 import './App.css'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { Router, BrowserRouter, Switch, Route } from 'react-router-dom'
 import Login from './pages/Login'
 import Admin from './pages/Admin'
+import history from './history'
+import AuthRoute from './routes/AuthRoute'
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      {/* 如果要在拦截器那使用路由，这里只能用Router，不能用BrowserRouter。
+        BrowserRouter = Router + Browserhistory，
+        如果拦截器那使用createBrowserHistory()创建history的话，相当于创建了一个新的history对象，无法实现跳转
+
+        <BrowserRouter></BrowserRouter>
+        等价于 
+        import {createBrowserHistory} from 'history' 
+        const history = createBrowserHistory()
+        <Router history={history}></Router>
+        可以把history抽离出来，这样就都使用的同一个history对象
+       */}
+      <Router history={history}>
         <Switch>
           <Route path="/login">
             <Login />
           </Route>
-          <Route path="/admin">
+          <AuthRoute path="/admin">
             <Admin />
-          </Route>
+          </AuthRoute>
           <Route path="/">
-            <Admin />
+            <Login />
           </Route>
         </Switch>
-      </BrowserRouter>
+      </Router>
     </div>
   )
 }

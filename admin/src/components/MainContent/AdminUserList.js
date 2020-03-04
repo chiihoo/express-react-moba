@@ -3,23 +3,22 @@ import { Table, Divider, PageHeader, message, Modal, Spin } from 'antd'
 import http from '../../http'
 import { Link, useHistory } from 'react-router-dom'
 
-function CategoryList(props) {
+function AdminUserList(props) {
   const history = useHistory()
   const [dataSource, setDataSource] = useState([])
   const [updateAction, setUpdateAction] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  // 里面这段代码必须放在useEffect中，必须加第二个参数，且不能是dataSource。
-  // 否则会无限循环，访问接口获取数据，存到dataSource，dataSource又改变dom，导致重新渲染，又会重新访问接口...
   useEffect(() => {
     const fetchItems = async () => {
       setLoading(true)
-      const items = await http.get('/rest/categories')
-      // 这里接口中.find().populate('parent')查到的parent字段为所属_id代表的对象
+      const items = await http.get('/rest/admin_users')
       const data = items.data.map((item, idx, arr) => {
-        return item.parent
-          ? { key: item._id, id: item._id, name: item.name, parent: item.parent.name }
-          : { key: item._id, id: item._id, name: item.name }
+        return {
+          key: item._id,
+          id: item._id,
+          username: item.username,
+        }
       })
       setDataSource(data)
       setLoading(false)
@@ -31,30 +30,18 @@ function CategoryList(props) {
   const removeItem = async data => {
     const { confirm } = Modal
     confirm({
-      title: `确定要删除分类 “${data.name}”？`,
+      title: `确定要删除用户 “${data.name}”？`,
       content: '此操作不可逆！',
       okText: '确定',
       cancelText: '取消',
       async onOk() {
-        const res = await http.delete(`/rest/categories/${data.id}`)
+        const res = await http.delete(`/rest/admin_users/${data.id}`)
         message.success('删除成功')
         setUpdateAction(!updateAction)
       },
       onCancel() {}
     })
   }
-  // const dataSource = [
-  //   {
-  //     key: '1',
-  //     id: 'id1',
-  //     name: 'name1'
-  //   },
-  //   {
-  //     key: '2',
-  //     id: 'id2',
-  //     name: 'name2'
-  //   }
-  // ]
 
   const columns = [
     {
@@ -64,15 +51,9 @@ function CategoryList(props) {
       width: 300
     },
     {
-      title: '上级分类',
-      dataIndex: 'parent',
-      key: 'parent',
-      width: 300
-    },
-    {
-      title: '分类',
-      dataIndex: 'name',
-      key: 'name',
+      title: '用户名',
+      dataIndex: 'username',
+      key: 'username',
       width: 300
     },
     {
@@ -82,7 +63,7 @@ function CategoryList(props) {
       render: (text, record) => {
         return (
           <span>
-            <Link to={`/admin/categories/edit/${record.id}`}>编辑</Link>
+            <Link to={`/admin/admin_users/edit/${record.id}`}>编辑</Link>
             <Divider type="vertical" />
             <a
               onClick={() => {
@@ -98,8 +79,8 @@ function CategoryList(props) {
   ]
 
   return (
-    <div className="CategoryList">
-      <PageHeader onBack={() => history.goBack()} title="分类列表"></PageHeader>
+    <div className="AdminUserList">
+      <PageHeader onBack={() => history.goBack()} title="用户名列表"></PageHeader>
       <Spin spinning={false}></Spin>
 
       <Table
@@ -112,4 +93,4 @@ function CategoryList(props) {
   )
 }
 
-export default CategoryList
+export default AdminUserList

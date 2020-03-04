@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { Menu, Icon } from 'antd'
 import './index.scss'
 import { Link, useHistory } from 'react-router-dom'
@@ -13,6 +13,18 @@ function LeftNav() {
     //把key上传到Admin的index.js，再往下传到header组件
     setHeaderCurrentName(e.keyPath[1])
   }
+
+  const rootSubmenuKeys = ['内容管理', '系统设置']
+  const [openKeysState, setOpenKeysState] = useState(['内容管理'])
+  const onOpenChange = openKeys => {
+    const latestOpenKey = openKeys.find(key => openKeysState.indexOf(key) === -1)
+    if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+      setOpenKeysState(openKeys)
+    } else {
+      setOpenKeysState(latestOpenKey ? [latestOpenKey] : [])
+    }
+  }
+
   return (
     <div className="LeftNav">
       <div className="logo">logo</div>
@@ -21,6 +33,8 @@ function LeftNav() {
         selectedKeys={[history.location.pathname]}
         defaultOpenKeys={['内容管理']}
         defaultSelectedKeys={['']}
+        openKeys={openKeysState}
+        onOpenChange={onOpenChange}
         mode="inline"
         style={{
           height: 'calc(100% - 64px)'
@@ -51,36 +65,32 @@ function LeftNav() {
               <Link to="/admin/items/list">物品列表</Link>
             </Menu.Item>
           </Menu.ItemGroup>
+          <Menu.ItemGroup key="heroes" title="英雄">
+            <Menu.Item key="/admin/heroes/create">
+              <Link to="/admin/heroes/create">新建英雄</Link>
+            </Menu.Item>
+            <Menu.Item key="/admin/heroes/list">
+              <Link to="/admin/heroes/list">英雄列表</Link>
+            </Menu.Item>
+          </Menu.ItemGroup>
         </SubMenu>
         <SubMenu
-          key="sub2"
+          key="系统设置"
           title={
             <span>
               <Icon type="appstore" />
-              <span>Navigation Two</span>
+              <span>系统设置</span>
             </span>
           }
         >
-          <Menu.Item key="5">Option 5</Menu.Item>
-          <Menu.Item key="6">Option 6</Menu.Item>
-          <SubMenu key="sub3" title="Submenu">
-            <Menu.Item key="7">Option 7</Menu.Item>
-            <Menu.Item key="8">Option 8</Menu.Item>
-          </SubMenu>
-        </SubMenu>
-        <SubMenu
-          key="sub4"
-          title={
-            <span>
-              <Icon type="setting" />
-              <span>Navigation Three</span>
-            </span>
-          }
-        >
-          <Menu.Item key="9">Option 9</Menu.Item>
-          <Menu.Item key="10">Option 10</Menu.Item>
-          <Menu.Item key="11">Option 11</Menu.Item>
-          <Menu.Item key="12">Option 12</Menu.Item>
+          <Menu.ItemGroup key="admin_users" title="管理员">
+            <Menu.Item key="/admin/admin_users/create">
+              <Link to="/admin/admin_users/create">新建管理员</Link>
+            </Menu.Item>
+            <Menu.Item key="/admin/admin_users/list">
+              <Link to="/admin/admin_users/list">管理员列表</Link>
+            </Menu.Item>
+          </Menu.ItemGroup>
         </SubMenu>
       </Menu>
     </div>

@@ -7,6 +7,10 @@ import CategoryEdit from '../../components/MainContent/CategoryEdit'
 import CategoryList from '../../components/MainContent/CategoryList'
 import ItemEdit from '../../components/MainContent/ItemEdit'
 import ItemList from '../../components/MainContent/ItemList'
+import HeroEdit from '../../components/MainContent/HeroEdit'
+import HeroList from '../../components/MainContent/HeroList'
+import AdminUserEdit from '../../components/MainContent/AdminUserEdit'
+import AdminUserList from '../../components/MainContent/AdminUserList'
 
 const { Header, Footer, Sider, Content } = Layout
 
@@ -42,7 +46,7 @@ function Admin() {
             <HeaderContent />
           </Header>
           <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-            <div style={{ padding: 24, background: '#fff', textAlign: 'center' }}>
+            <div style={{ padding: 24, background: '#fff' }}>
               <Switch>
                 <Route path="/admin/categories/create">
                   <CategoryEdit />
@@ -61,6 +65,24 @@ function Admin() {
                 </Route>
                 <Route path="/admin/items/list">
                   <ItemList />
+                </Route>
+                <Route path="/admin/heroes/create">
+                  <HeroEdit />
+                </Route>
+                <Route path="/admin/heroes/edit/:id">
+                  <HeroEdit />
+                </Route>
+                <Route path="/admin/heroes/list">
+                  <HeroList />
+                </Route>
+                <Route path="/admin/admin_users/create">
+                  <AdminUserEdit />
+                </Route>
+                <Route path="/admin/admin_users/edit/:id">
+                  <AdminUserEdit />
+                </Route>
+                <Route path="/admin/admin_users/list">
+                  <AdminUserList />
                 </Route>
 
                 <Route path="/admin">
