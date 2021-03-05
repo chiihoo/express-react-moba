@@ -62,7 +62,7 @@ class IconUpload extends React.Component {
         action={this.props.action}
         beforeUpload={beforeUpload}
         onChange={this.handleChange}
-        headers={{ authorization: `Bearea  ${localStorage.token || ''}` }}
+        headers={{ authorization: `Bearer ${localStorage.token || ''}` }}
       >
         {/* antd是直接把二进制或base64填入src */}
         {/* {imageUrl ? <img src={imageUrl} alt="icon" style={{ width: '100%' }} /> : uploadButton} */}
